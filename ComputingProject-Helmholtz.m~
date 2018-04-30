@@ -3,7 +3,7 @@ Ax = -pi;
 Bx = pi;
 Ay = -pi;
 By = pi;
-N = 15; % N+1 discretization
+N = 9; % N+1 discretization
 h = (Bx-Ax)/(N+1); % Since the discretization for x and y are equal, h is used.
 x = zeros(1,(N+1));
 y = zeros(1,(N+1));
@@ -35,5 +35,4 @@ d = length(z);
 z = floor(z/3);
 for l = 1:z
   A(1+(3*l),(3*l))= 0;
-  A((3*l),1+(3*l))= 0;
 end
