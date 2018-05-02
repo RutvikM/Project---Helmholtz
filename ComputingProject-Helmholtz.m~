@@ -3,30 +3,30 @@ Ax = -pi;
 Bx = pi;
 Ay = -pi;
 By = pi;
-N = 9; % N+1 discretization
-h = (Bx-Ax)/(N+1); % Since the discretization for x and y are equal, h is used.
-x = zeros(1,(N+1));
-y = zeros(1,(N+1));
+N = 5; % Number of points; N+1 discretizations
+h = (Bx-Ax)/(N+2); % Since the discretization for x and y are equal, h is used.
+x = zeros(1,(N+2));
+y = zeros(1,(N+2));
 x(1,1) = Ax;
 y(1,1) = Ay;
-for a = 2:(N+1)
+for a = 2:(N+2)
     x(1,a) = Ax+(a*h); % Grid being made in the for loop.
     y(1,a) = Ay+(a*h);
 end
 %Building the penta-diagonal Matrix
-A = zeros(N,N);
+A = zeros(N+2,N+2);
 a = 1;
 k = 3/2;
 b = -4+(k*h^2);
 c = -k^2*h^2;
-for l = 1:N
+for l = 1:(N+2)
   A(l,l) = b;
 end
-for l = 1:(N-3) 
+for l = 1:(N-1) 
   A(l+3,l) = a;
   A(l,l+3) = a;
 end
-for l = 1:(N-1)
+for l = 1:(N+1)
   A(l,l+1) = a;
   A(l+1,l) = a;
 end
@@ -35,4 +35,8 @@ d = length(z);
 z = floor(z/3);
 for l = 1:z
   A(1+(3*l),(3*l))= 0;
+  A((3*l),1+(3*l))= 0;
 end
+u = zeros(1,N+2);
+%u(1,1) =  % Need to use ghost node here since derivative given.
+
