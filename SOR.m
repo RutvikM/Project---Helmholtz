@@ -4,9 +4,9 @@ Ax = -pi;
 Bx = pi;
 Ay = -pi;
 By = pi;
-w = 1.4;
-N = 4; % Number of points; N+1 discretizations % ONLY WORKS FOR UP TO 4.
+N = 40; % Number of points; N+1 discretizations % ONLY WORKS FOR UP TO 4.
 h = (Bx-Ax)/(N+2); % Since the discretization for x and y are equal, h is used.
+w =  1.1;
 x = zeros(1,(N+2));
 y = zeros(1,(N+2));
 x(1,1) = Ax;
@@ -35,7 +35,7 @@ while Error>epsilon
          F(i,N+2) = cos(pi/2.*(2.*((x(N+2)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i))-Ay)/(By-Ay)); 
          C(i,(N+2)) = 0.25*w*(C(i-1,N+2)+C(i,N+1)+U(i,N+1)+U(i+1,N+2)-(h^2*F(i,N+2)))+((1-w)*U(i,j));
     end
-Err = max(abs(C-U));
+Err =max(abs(C-U))./max(U);
 Error = max(Err);
 U = C;
 counter = counter+1;
