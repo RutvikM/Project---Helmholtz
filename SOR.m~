@@ -46,3 +46,4 @@ title(['Solution of Poisson Equation Using SOR - Iteration ',num2str(counter)]);
 xlabel('X','Fontsize',14)
 ylabel('Y','Fontsize',14)
 zlabel('U','Fontsize',14)
+

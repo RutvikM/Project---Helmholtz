@@ -6,7 +6,10 @@ Bx = pi;
 Ay = -pi;
 By = pi;
 epsilon = 0.1;
-N = 100; % Number of points; N+1 discretizations 
+Error2=10;
+N = 25;
+while Error2>epsilon
+N = 2*N; % Number of points; N+1 discretizations 
 h = (Bx-Ax)/(N+2); % Since the discretization for x and y are equal, h is used.
 x = zeros(1,(N+2));
 y = zeros(1,(N+2));
@@ -22,38 +25,39 @@ U = zeros(N+2,N+2); % This is the initial guess matrix.
 C = zeros(N+2,N+2); % This is the matrix that will copy the previous time frame matrix 
 for i = 1:(N+2)
         C(1,i) = cos(pi*(x(i)-Ax))*cosh(Bx-x(i));
-        %C(1,i) = 1+x(i)^2+2*y(i)^2;
         C((N+2),i) = ((x(i)-Ax))^2*sin(pi*(x(i)-Ax)/(2*(Bx-Ax)));
-        %C(N+2,i) = 1+x(i)^2+2*y(i)^2;
+     
 
 end
-while Error>epsilon
-    for i = 2:(N+1)
-       for j = 2:(N+1)
-             F(i,j) = cos(pi/2.*(2.*((x(j)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i)-Ay)/(By-Ay)));
-            %F(i,j) = -6;
-            C(i,j) = 0.25*(C(i-1,j)+C(i,j-1)+U(i,j+1)+U(i+1,j)-(F(i,j)*h^2));
+    while Error>epsilon
+        for i = 2:(N+1)
+            for j = 2:(N+1)
+                F(i,j) = cos(pi/2.*(2.*((x(j)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i)-Ay)/(By-Ay)));
+                C(i,j) = 0.25*(C(i-1,j)+C(i,j-1)+U(i,j+1)+U(i+1,j)-(F(i,j)*h^2));
+            end
+            F(i,1) = cos(pi/2.*(2.*((x(1)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i))-Ay)/(By-Ay));
+            C(i,1) = 0.25*(C(i-1,1)+C(i,2)+U(i,2)+U(i+1,1)-(F(i,1)*h^2));
+            F(i,N+2) = cos(pi/2.*(2.*((x(N+2)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i))-Ay)/(By-Ay));
+            C(i,(N+2)) = 0.25*(C(i-1,N+2)+C(i,N+1)+U(i,N+1)+U(i+1,N+2)-(F(i,N+2)*h^2));
+            
         end
-        F(i,1) = cos(pi/2.*(2.*((x(1)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i))-Ay)/(By-Ay)); 
-        %F(i,1) = -6;
-        C(i,1) = 0.25*(C(i-1,1)+C(i,2)+U(i,2)+U(i+1,1)-(F(i,1)*h^2)); 
-        F(i,N+2) = cos(pi/2.*(2.*((x(N+2)-Ax)/(Bx-Ax))+1)).*sin(pi.*((y(i))-Ay)/(By-Ay));
-        %F(i,N+2)=-6;
-        C(i,(N+2)) = 0.25*(C(i-1,N+2)+C(i,N+1)+U(i,N+1)+U(i+1,N+2)-(F(i,N+2)*h^2));
-
+        Err = max((abs(C-U))./max(U));
+        Error = max(Err);
+        P = U;
+        U = C;
+        counter = counter+1;
     end
-Err = max((abs(C-U))./max(U));
-Error = max(Err);
-U = C;
-counter = counter+1;
+    Err2 = max(abs(P-U)./max(U));
+    Error2 = max(Err2);
 end
-figure(1)
-surf(x,y,U)
-title(['Solution of Poisson Equation Using Gauss-Seidel Method - Iteration ',num2str(counter)]);
-xlabel('X','Fontsize',14)
-ylabel('Y','Fontsize',14)
-zlabel('U','Fontsize',14)
-
+    figure(1)
+    surf(x,y,U)
+    title(['Solution of Poisson Equation Using Gauss-Seidel Method - Iteration ',num2str(counter)]);
+    xlabel('X','Fontsize',14)
+    ylabel('Y','Fontsize',14)
+    zlabel('U','Fontsize',14)
+    Err2 = max(abs(P-U)./max(U));
+    Error2 = max(Err2);
 
 % PART B - F = 0
 
